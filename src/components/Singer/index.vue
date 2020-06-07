@@ -63,23 +63,29 @@ export default {
     }
   },
   methods:{
+    //跳转到歌手详情页
     goDetail(Fsinger_mid){
       console.log(Fsinger_mid)
       this.$router.push(`/singer/${Fsinger_mid}`)
     },
-    // 手指的触摸移动事件
+    // 手指的触摸起始位置事件
     touchStart(e){
       // 设定距离屏幕顶部的位置是140
+      // console.log(e);
+      //获取到当前触摸到的位置距屏幕顶部的距离
       let y = e.touches[0].pageY
       // 获取按下的格子下标
       let startCount=parseInt((y-140)/18)
+      // console.log("this",this);//this指向vue实例
+      //通过this.touch将touch挂载到vue实例下面，再将y、startCount放到touch对象中
       this.touch.y=y
       this.touch.startCount=startCount
       console.log('按下',y ,startCount)
     },
+    //手指滑动事件
     touchMove(e){
       let moveY =e.touches[0].pageY
-      let moveDis=moveY-this.touch.y //计算出移动过的距离
+      let moveDis=moveY-this.touch.y //计算出移动过的距离，据起始事件的距离
       let count =parseInt(moveDis/18) //获取移动过的格子数
       console.log('移动',moveDis,count)
       let moveIndex =this.touch.startCount + count  //获取下标
@@ -101,8 +107,10 @@ export default {
     },
     initBs(){
       let wrapper = this.$refs.singerWrapper
+      // console.log(this.$refs);
+      
       this.Bs = new BS(wrapper,{probeType:3,click:true})
-      // 获取距离数组  
+      // 将每个字母的offsetTop值存放到distance数组中
       let distance=[]
       for (const key in this.$refs) {
           if(key!=='singerWrapper'){
@@ -112,10 +120,12 @@ export default {
     // 监听滚动
     this.Bs.on('scroll',(pos)=>{
       let y =Math.abs(pos.y)
-      console.log('滚了',y)
+      // pos当前的坐标
+      console.log('滚了',pos,y)
       // 判断每一次滚动的距离在什么范围内
       let scrollIndex = 0 //滚动所在区域的下标
       for (let index = 0; index < distance.length; index++) {
+        //若当前的距离在当前字母的范围内，则将当前字母的下标赋给scrollIndex
           if(y>=distance[index]&&y<distance[index+1]){
             scrollIndex=index
           }else if(y>=distance[distance.length-1]){
@@ -127,6 +137,7 @@ export default {
       // 根据下标换字母
       let scrollFindex=this.quickData[scrollIndex]
       console.log(scrollFindex)
+      //selFindex为字母选中颜色样式的控制
       this.selFindex=scrollFindex
     })
     
@@ -135,7 +146,6 @@ export default {
   computed: {
     quickData(){
       // 快速入口数据和歌手数据做关联
- 
       let result = this.singers.map((item)=>{
         return item.Findex
       })
@@ -147,7 +157,7 @@ export default {
     // 初始化数据 把移动距离挂载到this对象下
   
     this.touch={y:0}
-    console.log(111)
+    // console.log(111)
    getSingersData().then((res)=>{
     //  处理数据
      let data =nomalData(res.data.list)

@@ -66,7 +66,7 @@ let getRankList=(topid)=>{
 let getKeySearch=(kw)=>{
   // let url='/xixi/fcj/music/search'
   // return axios.get(url,{params:{kw}})
-  let url=`https://c.y.qq.com/soso/fcgi-bin/client_search_cp?p=1&n=20&w=${kw}&cr=1&aggr=1`
+  let url=`https://c.y.qq.com/soso/fcgi-bin/client_search_cp?aggr=1&cr=1&flag_qc=0&p=1&n=20&w=${kw}`
   return new Promise((resolve,reject)=>{
     jsonp(url,{param:'jsonpCallback'},(err,data)=>{
       if(err){ reject(err)}

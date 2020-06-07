@@ -29,7 +29,6 @@
     color: rgba(255,255,255,0.5);
     span{
       height: 38px;
-    
       display: inline-block; 
       border-bottom: 2px solid @black2;
     }
